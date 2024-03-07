@@ -1,17 +1,24 @@
 package main
 
 import (
+	"fmt"
+	"github.com/duruyao/gotest/data"
 	"github.com/duruyao/gotest/util"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 )
 
-const fileServerAddress = "http://10.0.13.134:3927"
-const testResultsDirFmt = `/opt/share0/gitlab-ci/{{.Project}}/test-result/{{.TestStages}}/{{.Branch}}/{{.FileType}}`
+const testResultsDirFmt = `/opt/gitlab-data/gitlab-test/{{.Project}}/test-result/{{.TestStages}}/{{.Branch}}/{{.FileType}}`
 
 func main() {
 	router := gin.Default()
+
+	// http://localhost:8080/history?project=vc0728&test_type=accuracy&branch=dev&test_case_id=QWxleE5ldG5ldzBPdXRsaWVyX1JlbW92ZU91dGxpZXJfUmVtb3ZlRXVjbGlkZWFu
+	// http://localhost:8080/history?project=vc0728&test_type=similarity&branch=dev&test_case_id=MTYvQllQX0pLWV9tb2RlbF8x
+	//
+	// http://localhost:8080/history?project=vc0768&test_type=accuracy&branch=dev&test_case_id=QWxleE5ldG5ldzBPdXRsaWVyX1JlbW92ZU91dGxpZXJfUmVtb3ZlRXVjbGlkZWFu
+	// http://localhost:8080/history?project=vc0728&test_type=similarity&branch=dev&test_case_id=MTYvQllQX0pLWV9tb2RlbF8x_1
 	router.GET("/history", func(c *gin.Context) {
 		project := c.DefaultQuery("project", "vc0728")
 		if !map[string]bool{"vc0728": true, "vc0768": true}[project] {
@@ -30,7 +37,7 @@ func main() {
 
 		testCaseId := c.Query("test_case_id")
 
-		testResultsUrl := fileServerAddress + util.TemplateToStringMust(testResultsDirFmt, struct {
+		testResultsDir := util.TemplateToStringMust(testResultsDirFmt, struct {
 			Project    string
 			TestStages string
 			Branch     string
@@ -41,14 +48,22 @@ func main() {
 			Branch:     branch,
 			FileType:   "csv",
 		})
-		c.IndentedJSON(http.StatusOK, gin.H{
-			"project":          project,
-			"test_type":        testType,
-			"teat_stage":       testStages,
-			"branch":           branch,
-			"test_case_id":     testCaseId,
-			"test_results_url": testResultsUrl,
-		})
+
+		if results, err := data.QueryResultsFromDir(testResultsDir, testCaseId); err != nil {
+			c.IndentedJSON(http.StatusBadRequest, gin.H{
+				"project":          project,
+				"test_type":        testType,
+				"test_stages":      testStages,
+				"branch":           branch,
+				"test_case_id":     testCaseId,
+				"test_results_dir": testResultsDir,
+				"error":            err,
+			})
+		} else {
+			for _, result := range results {
+				_, _ = fmt.Fprintln(c.Writer, result)
+			}
+		}
 	})
-	log.Fatalln(router.Run())
+	log.Fatalln(router.Run("localhost:8080"))
 }

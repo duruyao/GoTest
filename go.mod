@@ -2,7 +2,10 @@ module github.com/duruyao/gotest
 
 go 1.21.5
 
-require github.com/gin-gonic/gin v1.9.1
+require (
+	github.com/gin-gonic/gin v1.9.1
+	github.com/gocarina/gocsv v0.0.0-20231116093920-b87c2d0e983a
+)
 
 require (
 	github.com/bytedance/sonic v1.9.1 // indirect
