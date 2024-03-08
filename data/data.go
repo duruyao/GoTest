@@ -1,8 +1,6 @@
 package data
 
 import (
-	"errors"
-	"fmt"
 	"github.com/gocarina/gocsv"
 	"io/fs"
 	"log"
@@ -29,10 +27,10 @@ type Result struct {
 	record
 }
 
-func queryRecordFromFile(filename, targetCaseId string) (record, error) {
+func queryRecordFromFile(filename, targetCaseId string) (*record, error) {
 	f, e := os.Open(filename)
 	if e != nil {
-		return record{}, e
+		return nil, e
 	}
 	defer func() {
 		if e = f.Close(); e != nil {
@@ -41,14 +39,14 @@ func queryRecordFromFile(filename, targetCaseId string) (record, error) {
 	}()
 	var records []record
 	if e := gocsv.UnmarshalFile(f, &records); e != nil {
-		return record{}, e
+		return nil, e
 	}
 	for _, r := range records {
 		if r.CaseId == targetCaseId {
-			return r, nil
+			return &r, nil
 		}
 	}
-	return record{}, errors.New(fmt.Sprintf("No such CaseId: %s", targetCaseId))
+	return nil, nil
 }
 
 func QueryResultsFromDir(resultsDir, caseId string) ([]Result, error) {
@@ -69,14 +67,12 @@ func QueryResultsFromDir(resultsDir, caseId string) ([]Result, error) {
 	sort.Strings(csvFiles)
 
 	for _, csvFile := range csvFiles {
-		if r, e := queryRecordFromFile(csvFile, caseId); e != nil {
-			log.Println(e)
-		} else {
+		if r, e := queryRecordFromFile(csvFile, caseId); r != nil && e == nil {
 			results = append(results, Result{
 				Date:       time.Time{},
 				Value:      0,
 				HtmlDocUrl: fileServerAddress + strings.ReplaceAll(csvFile, "csv", "html"),
-				record:     r,
+				record:     *r,
 			})
 		}
 	}

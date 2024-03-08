@@ -49,7 +49,7 @@ func main() {
 			FileType:   "csv",
 		})
 
-		if results, err := data.QueryResultsFromDir(testResultsDir, testCaseId); err != nil {
+		if results, err := data.QueryResultsFromDir(testResultsDir, testCaseId); len(results) == 0 || err != nil {
 			c.IndentedJSON(http.StatusBadRequest, gin.H{
 				"project":          project,
 				"test_type":        testType,
@@ -58,9 +58,11 @@ func main() {
 				"test_case_id":     testCaseId,
 				"test_results_dir": testResultsDir,
 				"error":            err,
+				"results":          results,
 			})
 		} else {
 			for _, result := range results {
+				_, _ = fmt.Fprintln(c.Writer, "")
 				_, _ = fmt.Fprintln(c.Writer, result)
 			}
 		}
