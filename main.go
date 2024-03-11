@@ -1,15 +1,14 @@
 package main
 
 import (
-	"github.com/duruyao/gotest/data"
+	"github.com/duruyao/gotest/accuracy"
+	"github.com/duruyao/gotest/conf"
 	"github.com/duruyao/gotest/graph"
 	"github.com/duruyao/gotest/util"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 )
-
-const testResultsDirFmt = `/opt/gitlab-data/gitlab-test/{{.Project}}/test-result/{{.TestStages}}/{{.Branch}}/{{.FileType}}`
 
 func main() {
 	router := gin.Default()
@@ -37,7 +36,7 @@ func main() {
 
 		testCaseId := c.Query("test_case_id")
 
-		testResultsDir := util.TemplateToStringMust(testResultsDirFmt, struct {
+		testResultsDir := util.TemplateToStringMust(conf.TestResultsDirFmt, struct {
 			Project    string
 			TestStages string
 			Branch     string
@@ -48,8 +47,10 @@ func main() {
 			Branch:     branch,
 			FileType:   "csv",
 		})
-
-		if results, err := data.QueryResultsFromDir(testResultsDir, testCaseId); len(results) == 0 || err != nil {
+		if testType != "accuracy" {
+			return
+		}
+		if results, err := accuracy.QueryResults(testResultsDir, testCaseId); len(results) == 0 || err != nil {
 			c.IndentedJSON(http.StatusBadRequest, gin.H{
 				"project":          project,
 				"test_type":        testType,
@@ -61,12 +62,12 @@ func main() {
 				"results":          results,
 			})
 		} else {
-			xData, yData := make([]string, 0), make([]float64, 0)
-			for _, result := range results {
-				xData = append(xData, result.CommitId)
-				yData = append(yData, util.StringToFloat64Must(result.Accuracy))
-			}
-			err := graph.Line{}.Render(c.Writer, xData, yData)
+			//xData, yData := make([]string, 0), make([]float64, 0)
+			//for _, result := range results {
+			//	xData = append(xData, result.DateMust())
+			//	yData = append(yData, util.StringToFloat64Must(result.Value))
+			//}
+			err := graph.Line{}.Render(c.Writer, results)
 			if err != nil {
 				c.IndentedJSON(http.StatusBadRequest, gin.H{
 					"project":          project,
