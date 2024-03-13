@@ -53,24 +53,24 @@ func (r *Result) DateMust() string {
 	return t.Format("06-01-02") // YY-MM-DD
 }
 
-func (r *Result) TestCaseUrl() string {
+func (r *Result) TestCasePackageUrl() string {
 	return fmt.Sprintf("%s/artifacts/raw/%s?inline=false", r.JobUrl, r.CasePath)
 }
 
-func (r *Result) TestCaseName() string {
-	t := path.Base(r.NpuModel)
-	t = strings.ReplaceAll(t, "--", "-")
-	t = strings.ReplaceAll(t, "-.npumodel", "")
-	t = strings.ReplaceAll(t, ".npumodel", "")
-	return t
+func (r *Result) TestCaseShortTitle() string {
+	return strings.Join(strings.Split(path.Base(r.NpuModel), "--")[:3], "-")
 }
 
 func (r *Result) HtmlDirUrl() string {
 	return fmt.Sprintf("%s%s", conf.FileServerAddress, strings.ReplaceAll(r.CsvDir, "csv", "html"))
 }
 
-func (r *Result) SubTitle() string {
+func (r *Result) TestCaseLongTitle() string {
 	return fmt.Sprintf("Accuracy test results for project %s (%s branch)", r.ProjectNameMust(), r.CommitBranch)
+}
+
+func (r *Result) HtmlPageRecordUrl() string {
+	return fmt.Sprintf("%s%s#%s", conf.FileServerAddress, strings.ReplaceAll(r.CsvPath, "csv", "html"), r.Id)
 }
 
 func queryRecord(file, id string) (*record, error) {

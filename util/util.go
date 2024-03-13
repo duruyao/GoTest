@@ -5,6 +5,7 @@ import (
 	"encoding/base32"
 	"log"
 	"strconv"
+	"strings"
 	"text/template"
 )
 
@@ -28,4 +29,11 @@ func StringToFloat64Must(s string) float64 {
 		log.Fatalln(e)
 	}
 	return n
+}
+
+func StringsToJsArray(s []string) string {
+	if len(s) == 0 {
+		return `[]`
+	}
+	return `["` + strings.Join(s, `", "`) + `"]`
 }

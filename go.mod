@@ -4,7 +4,7 @@ go 1.21.5
 
 require (
 	github.com/gin-gonic/gin v1.9.1
-	github.com/go-echarts/go-echarts/v2 v2.3.3
+	github.com/go-echarts/go-echarts/v2 v2.4.0-rc1
 	github.com/gocarina/gocsv v0.0.0-20231116093920-b87c2d0e983a
 )
 
