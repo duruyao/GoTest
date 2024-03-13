@@ -24,7 +24,6 @@ func StringToFloat64Must(s string) float64 {
 		return 0
 	}
 	n, e := strconv.ParseFloat(s, 64)
-	log.Println(s)
 	if e != nil {
 		log.Fatalln(e)
 	}

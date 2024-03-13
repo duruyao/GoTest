@@ -54,7 +54,8 @@ func (r *Result) DateMust() string {
 }
 
 func (r *Result) TestCasePackageUrl() string {
-	return fmt.Sprintf("%s/artifacts/raw/%s?inline=false", r.JobUrl, r.CasePath)
+	s := strings.Split(r.CasePath, r.ProjectNameMust()+"/")
+	return fmt.Sprintf("%s/artifacts/raw/%s?inline=false", r.JobUrl, s[len(s)-1])
 }
 
 func (r *Result) TestCaseShortTitle() string {
