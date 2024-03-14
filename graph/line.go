@@ -49,6 +49,11 @@ func (Line) RenderAccuracy(r io.Writer, results []accuracy.Result) error {
 		charts.WithLineChartOpts(
 			opts.LineChart{Smooth: opts.Bool(false), ShowSymbol: opts.Bool(true), SymbolSize: 10, Symbol: "circle"},
 		),
+		charts.WithMarkPointNameTypeItemOpts(
+			opts.MarkPointNameTypeItem{Name: "Maximum", Type: "max"},
+		),
+		charts.WithMarkPointStyleOpts(
+			opts.MarkPointStyle{Label: &opts.Label{Show: opts.Bool(true)}}),
 	)
 
 	page := components.NewPage()
