@@ -96,7 +96,7 @@ func queryRecord(file, id string) (*record, error) {
 	return nil, nil
 }
 
-func QueryResults(dir, id string) ([]Result, error) {
+func QueryResults(dir, id, commit string) ([]Result, error) {
 	var results []Result
 
 	var csvFiles []string
@@ -113,7 +113,17 @@ func QueryResults(dir, id string) ([]Result, error) {
 	}
 	sort.Strings(csvFiles)
 
-	for _, csvFile := range csvFiles {
+	idx := len(csvFiles)
+	if found := false; len(commit) > 0 {
+		for idx, found = 0, false; idx < len(csvFiles); idx++ {
+			if contains := strings.Contains(csvFiles[idx], commit); found && (!contains) {
+				break
+			} else {
+				found = contains
+			}
+		}
+	}
+	for _, csvFile := range csvFiles[:idx] {
 		if r, e := queryRecord(csvFile, id); r != nil && e == nil {
 			results = append(results, Result{
 				CsvDir:  dir,

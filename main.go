@@ -36,6 +36,8 @@ func main() {
 
 		testCaseId := c.Query("test_case_id")
 
+		commitShortSha := c.DefaultQuery("commit_short_sha", "")
+
 		testResultsDir := util.TemplateToStringMust(conf.TestResultsDirFmt, struct {
 			Project    string
 			TestStages string
@@ -54,18 +56,20 @@ func main() {
 				"test_stages":      testStages,
 				"branch":           branch,
 				"test_case_id":     testCaseId,
+				"commit_short_sha": commitShortSha,
 				"test_results_dir": testResultsDir,
 				"error":            "Unsupported testType: " + testType,
 			})
 			return
 		}
-		if results, err := accuracy.QueryResults(testResultsDir, testCaseId); len(results) == 0 || err != nil {
+		if results, err := accuracy.QueryResults(testResultsDir, testCaseId, commitShortSha); len(results) == 0 || err != nil {
 			c.IndentedJSON(http.StatusBadRequest, gin.H{
 				"project":          project,
 				"test_type":        testType,
 				"test_stages":      testStages,
 				"branch":           branch,
 				"test_case_id":     testCaseId,
+				"commit_short_sha": commitShortSha,
 				"test_results_dir": testResultsDir,
 				"error":            err,
 				"results":          results,
@@ -79,6 +83,7 @@ func main() {
 					"test_stages":      testStages,
 					"branch":           branch,
 					"test_case_id":     testCaseId,
+					"commit_short_sha": commitShortSha,
 					"test_results_dir": testResultsDir,
 					"error":            err,
 					"results":          results,

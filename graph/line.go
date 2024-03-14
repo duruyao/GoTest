@@ -47,11 +47,12 @@ func (Line) RenderAccuracy(r io.Writer, results []accuracy.Result) error {
 	line.AddSeries(results[len(results)-1].TestCaseShortTitle(), series)
 	line.SetSeriesOptions(
 		charts.WithLineChartOpts(
-			opts.LineChart{Smooth: opts.Bool(true), ShowSymbol: opts.Bool(true), SymbolSize: 10, Symbol: "circle"},
+			opts.LineChart{Smooth: opts.Bool(false), ShowSymbol: opts.Bool(true), SymbolSize: 10, Symbol: "circle"},
 		),
 	)
 
 	page := components.NewPage()
+	page.SetPageTitle("GoTest")
 	page.AddCharts(line)
 
 	return page.Render(io.MultiWriter(r))
