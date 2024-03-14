@@ -30,9 +30,9 @@ func (Line) RenderAccuracy(r io.Writer, results []accuracy.Result) error {
 	line.SetGlobalOptions(
 		charts.WithTitleOpts(
 			opts.Title{
-				Title:    results[len(results)-1].TestCaseShortTitle(),
+				Title:    results[len(results)-1].TestCaseTitle(),
 				Link:     results[len(results)-1].TestCasePackageUrl(),
-				Subtitle: results[len(results)-1].TestCaseLongTitle(),
+				Subtitle: results[len(results)-1].TestCaseSubTitles(),
 				SubLink:  results[len(results)-1].HtmlDirUrl(),
 			},
 		),
@@ -44,7 +44,7 @@ func (Line) RenderAccuracy(r io.Writer, results []accuracy.Result) error {
 	)
 
 	line.SetXAxis(xAxis)
-	line.AddSeries(results[len(results)-1].TestCaseShortTitle(), series)
+	line.AddSeries(results[len(results)-1].TestCaseTitle(), series)
 	line.SetSeriesOptions(
 		charts.WithLineChartOpts(
 			opts.LineChart{Smooth: opts.Bool(false), ShowSymbol: opts.Bool(true), SymbolSize: 10, Symbol: "circle"},

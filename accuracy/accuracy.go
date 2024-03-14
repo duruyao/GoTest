@@ -58,7 +58,7 @@ func (r *Result) TestCasePackageUrl() string {
 	return fmt.Sprintf("%s/artifacts/raw/%s?inline=false", r.JobUrl, s[len(s)-1])
 }
 
-func (r *Result) TestCaseShortTitle() string {
+func (r *Result) TestCaseTitle() string {
 	return strings.Join(strings.Split(path.Base(r.NpuModel), "--")[:3], "-")
 }
 
@@ -66,8 +66,8 @@ func (r *Result) HtmlDirUrl() string {
 	return fmt.Sprintf("%s%s", conf.FileServerAddress, strings.ReplaceAll(r.CsvDir, "csv", "html"))
 }
 
-func (r *Result) TestCaseLongTitle() string {
-	return fmt.Sprintf("Accuracy test results for project %s (%s branch)", r.ProjectNameMust(), r.CommitBranch)
+func (r *Result) TestCaseSubTitles() string {
+	return fmt.Sprintf("ai_npu/%s/%s", r.ProjectNameMust(), r.CommitBranch)
 }
 
 func (r *Result) HtmlPageRecordUrl() string {
