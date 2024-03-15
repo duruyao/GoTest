@@ -53,7 +53,7 @@ func (Line) RenderAccuracy(r io.Writer, results []accuracy.Result) error {
 			opts.MarkPointNameTypeItem{Name: "Maximum", Type: "max"},
 		),
 		charts.WithMarkPointStyleOpts(
-			opts.MarkPointStyle{Label: &opts.Label{Show: opts.Bool(true)}}),
+			opts.MarkPointStyle{SymbolSize: 80, Label: &opts.Label{Show: opts.Bool(true)}}),
 	)
 
 	page := components.NewPage()
