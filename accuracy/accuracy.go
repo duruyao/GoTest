@@ -113,17 +113,16 @@ func QueryResults(dir, id, commit string) ([]Result, error) {
 	}
 	sort.Strings(csvFiles)
 
-	idx := len(csvFiles)
-	if found := false; len(commit) > 0 {
-		for idx, found = 0, false; idx < len(csvFiles); idx++ {
-			if contains := strings.Contains(csvFiles[idx], commit); found && (!contains) {
+	end := len(csvFiles)
+	if len(commit) > 0 {
+		for i := len(csvFiles) - 1; i >= 0; i-- {
+			if strings.Contains(csvFiles[i], commit) {
+				end = i + 1
 				break
-			} else {
-				found = contains
 			}
 		}
 	}
-	for _, csvFile := range csvFiles[:idx] {
+	for _, csvFile := range csvFiles[:end] {
 		if r, e := queryRecord(csvFile, id); r != nil && e == nil {
 			results = append(results, Result{
 				CsvDir:  dir,
