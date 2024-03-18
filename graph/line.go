@@ -1,7 +1,6 @@
 package graph
 
 import (
-	"github.com/duruyao/gotest/accuracy"
 	"github.com/duruyao/gotest/util"
 	"github.com/go-echarts/go-echarts/v2/charts"
 	"github.com/go-echarts/go-echarts/v2/components"
@@ -10,16 +9,14 @@ import (
 	"io"
 )
 
-type Line struct{}
-
-func (Line) RenderAccuracy(r io.Writer, results []accuracy.Result) error {
+func Render(r io.Writer, data Data, option Option) error {
 	xAxis := make([]string, 0)
 	links := make([]string, 0)
 	series := make([]opts.LineData, 0)
-	for i := range results {
-		xAxis = append(xAxis, results[i].DateMust())
-		links = append(links, results[i].HtmlPageRecordUrl())
-		series = append(series, opts.LineData{Value: util.StringToFloat64Must(results[i].Value)})
+	for i := 0; i < data.N(); i++ {
+		xAxis = append(xAxis, data.X(i))
+		links = append(links, data.Link(i))
+		series = append(series, opts.LineData{Value: data.Y(i)})
 	}
 
 	line := charts.NewLine()
@@ -30,24 +27,30 @@ func (Line) RenderAccuracy(r io.Writer, results []accuracy.Result) error {
 	line.SetGlobalOptions(
 		charts.WithTitleOpts(
 			opts.Title{
-				Title:    results[len(results)-1].TestCaseTitle(),
-				Link:     results[len(results)-1].TestCasePackageUrl(),
-				Subtitle: results[len(results)-1].TestCaseSubTitles(),
-				SubLink:  results[len(results)-1].HtmlDirUrl(),
+				Title:    option.Title(),
+				Link:     option.Link(),
+				Subtitle: option.Subtitle(),
+				SubLink:  option.SubLink(),
 			},
 		),
 		charts.WithTooltipOpts(opts.Tooltip{Show: opts.Bool(true), Trigger: "axis", Enterable: opts.Bool(true)}),
 		charts.WithInitializationOpts(opts.Initialization{Width: "2000px", Height: "800px"}),
-		//charts.WithXAxisOpts(opts.XAxis{Name: "Date"}),
-		//charts.WithYAxisOpts(opts.YAxis{Name: "Accuracy"}),
+		charts.WithXAxisOpts(opts.XAxis{Name: option.XName()}),
+		charts.WithYAxisOpts(opts.YAxis{Name: option.YName()}),
 		charts.WithEventListeners(event.Listener{EventName: "click", Handler: opts.FuncOpts(JFunc)}),
 	)
 
 	line.SetXAxis(xAxis)
-	line.AddSeries(results[len(results)-1].TestCaseTitle(), series)
+	line.AddSeries(option.Title(), series)
 	line.SetSeriesOptions(
 		charts.WithLineChartOpts(
-			opts.LineChart{Smooth: opts.Bool(false), ShowSymbol: opts.Bool(true), SymbolSize: 10, Symbol: "circle"},
+			opts.LineChart{
+				Smooth:     opts.Bool(false),
+				ShowSymbol: opts.Bool(true),
+				SymbolSize: 10,
+				Symbol:     option.LineChartSymbol(),
+				Color:      option.LineChartColor(),
+			},
 		),
 		charts.WithMarkPointNameTypeItemOpts(
 			opts.MarkPointNameTypeItem{Name: "Maximum", Type: "max"},
