@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/duruyao/gotest/args"
+	"github.com/duruyao/gotest/arg"
 	"github.com/duruyao/gotest/conf"
 	"github.com/duruyao/gotest/data"
 	"github.com/duruyao/gotest/graph"
@@ -13,18 +13,18 @@ import (
 )
 
 func main() {
-	if args.WantHelp() {
-		fmt.Println(args.Usage())
+	if arg.WantHelp() {
+		fmt.Println(arg.Usage())
 		return
 	}
-	if args.WantVersion() {
+	if arg.WantVersion() {
 		fmt.Println(conf.VersionSerial())
 		return
 	}
 
 	router := gin.Default()
 	router.GET("/history", func(c *gin.Context) {
-		params := struct {
+		param := struct {
 			Project        string `form:"project" binding:"required,oneof=vc0728 vc0768"`
 			TestType       string `form:"test_type" binding:"required,oneof=accuracy similarity"`
 			Branch         string `form:"branch" binding:"required"`
@@ -32,14 +32,14 @@ func main() {
 			CommitShortSha string `form:"commit_short_sha"`
 		}{}
 
-		if err := c.ShouldBindQuery(&params); err != nil {
+		if err := c.ShouldBindQuery(&param); err != nil {
 			c.IndentedJSON(http.StatusBadRequest, gin.H{"error": err})
 			return
 		}
 
-		testResultDir := util.TemplateToStringMust(conf.CsvResultDirTmpl, params)
+		testResultDir := util.TemplateToStringMust(conf.CsvResultDirTmpl, param)
 
-		if history, err := data.QueryHistory(testResultDir, params.TestCaseId, params.CommitShortSha); err != nil {
+		if history, err := data.QueryHistory(testResultDir, param.TestCaseId, param.CommitShortSha); err != nil {
 			c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err})
 			return
 		} else if history.Data.N() == 0 {
@@ -51,5 +51,5 @@ func main() {
 			}
 		}
 	})
-	log.Fatalln(router.Run(args.Host()))
+	log.Fatalln(router.Run(arg.Host()))
 }
