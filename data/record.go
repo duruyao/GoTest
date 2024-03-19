@@ -6,7 +6,6 @@ import (
 	"github.com/duruyao/gotest/util"
 	"github.com/gocarina/gocsv"
 	"log"
-	"math/rand"
 	"os"
 	"path"
 	"strings"
@@ -56,12 +55,21 @@ func (r *record) dateMust() string {
 }
 
 func (r *record) accuracyMust() float64 {
-	return util.StringToFloat64Must(r.Accuracy)
+	if len(r.Accuracy) > 0 {
+		return util.StringToFloatMust(r.Accuracy)
+	}
+	return 0.0
 }
 
 func (r *record) similarityMust() float64 {
-	// TODO: finish
-	return float64(rand.Int() % 100 / 100)
+	if len(r.Similarity) > 2 {
+		s, sum := strings.Split(r.Similarity[1:len(r.Similarity)-1], ", "), 0.0
+		for i := range s {
+			sum += util.StringToFloatMust(s[i])
+		}
+		return util.ChangeFloatPrecision(sum/float64(len(s)), 3)
+	}
+	return 0.0
 }
 
 func (r *record) recordUrl() string {
@@ -69,7 +77,11 @@ func (r *record) recordUrl() string {
 }
 
 func (r *record) packageTitleMust() string {
-	return strings.Join(strings.Split(path.Base(r.NpuModelPath), "--")[:3], "-")
+	if model := path.Base(r.NpuModelPath); strings.Contains(model, "--") {
+		return strings.Join(strings.Split(model, "--")[:3], "-")
+	}
+	s := strings.Split(util.RemoveExt(r.NpuModelPath), "/")
+	return s[len(s)-1] + "-" + s[len(s)-2]
 }
 
 func (r *record) packageUrlMust() string {
