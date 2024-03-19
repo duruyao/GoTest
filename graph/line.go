@@ -1,6 +1,7 @@
 package graph
 
 import (
+	"github.com/duruyao/gotest/conf"
 	"github.com/duruyao/gotest/util"
 	"github.com/go-echarts/go-echarts/v2/charts"
 	"github.com/go-echarts/go-echarts/v2/components"
@@ -60,7 +61,7 @@ func Render(r io.Writer, data Data, option Option) error {
 	)
 
 	page := components.NewPage()
-	page.SetPageTitle("GoTest")
+	page.SetPageTitle(conf.App)
 	page.AddCharts(line)
 
 	return page.Render(io.MultiWriter(r))

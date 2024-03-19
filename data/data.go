@@ -6,12 +6,6 @@ type Data struct {
 	link []string
 }
 
-//func (d *Data) Init(len, cap int) {
-//	d.x = make([]string, len, cap)
-//	d.y = make([]float64, len, cap)
-//	d.link = make([]string, len, cap)
-//}
-
 func (d *Data) Append(x string, y float64, link string) {
 	d.x = append(d.x, x)
 	d.y = append(d.y, y)
