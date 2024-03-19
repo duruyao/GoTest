@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="gotest" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="gotest" />
+    <working_directory value="$PROJECT_DIR$" />
+    <kind value="PACKAGE" />
+    <package value="github.com/duruyao/gotest" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/main.go" />
+    <output_directory value="$USER_HOME$/Projects/gotest" />
+    <method v="2" />
+  </configuration>
+</component>

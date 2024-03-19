@@ -8,13 +8,16 @@
 tmp/*
 *.swp
 *~
+bin/*
+release*
 
 # Commitizen
 node_modules/
-package.json
 package-lock.json
 
 # Binaries for programs and plugins
+gotest
+gotest.exe
 app/*
 *.exe
 *.exe~

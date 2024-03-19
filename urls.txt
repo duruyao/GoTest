@@ -1,5 +1,0 @@
-http://0.0.0.0:4936/history?project=vc0728&test_type=accuracy&branch=dev&test_case_id=QWxleE5ldG5ldzBPdXRsaWVyX1JlbW92ZU91dGxpZXJfUmVtb3ZlRXVjbGlkZWFu
-http://0.0.0.0:4936/history?project=vc0728&test_type=similarity&branch=dev&test_case_id=MTYvQllQX0pLWV9tb2RlbF8x
-
-http://0.0.0.0:4936/history?project=vc0768&test_type=accuracy&branch=dev&test_case_id=QWxleE5ldG5ldzBPdXRsaWVyX1JlbW92ZU91dGxpZXJfUmVtb3ZlRXVjbGlkZWFu
-http://0.0.0.0:4936/history?project=vc0728&test_type=similarity&branch=dev&test_case_id=MTYvQllQX0pLWV9tb2RlbF8x_1
