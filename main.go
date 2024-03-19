@@ -14,65 +14,30 @@ func main() {
 	router := gin.Default()
 
 	router.GET("/history", func(c *gin.Context) {
-		project := c.DefaultQuery("project", "vc0728")
-		if !map[string]bool{"vc0728": true, "vc0768": true}[project] {
-			c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "valid project value: " + project})
+		param := struct {
+			Branch         string `form:"branch" binding:"required"`
+			Project        string `form:"project" binding:"required,oneof=vc0728 vc0768"`
+			TestType       string `form:"test_type" binding:"required,oneof=accuracy similarity"`
+			TestCaseId     string `form:"test_case_id" binding:"required"`
+			CommitShortSha string `form:"commit_short_sha"`
+		}{}
+
+		if err := c.ShouldBindQuery(&param); err != nil {
+			c.IndentedJSON(http.StatusBadRequest, gin.H{"error": err})
 			return
 		}
 
-		testType := c.DefaultQuery("test_type", "accuracy")
-		testStages, ok := map[string]string{"accuracy": "convert-infer", "similarity": "convert-dump-compare"}[testType]
-		if !ok {
-			c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "invalid test_type value: " + testType})
+		testResultDir := util.TemplateToStringMust(conf.CsvResultDirFmt, param)
+
+		if history, err := data.QueryHistory(testResultDir, param.TestCaseId, param.CommitShortSha); err != nil {
+			c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err})
 			return
-		}
-
-		branch := c.DefaultQuery("branch", "dev")
-
-		testCaseId := c.Query("test_case_id")
-
-		commitShortSha := c.DefaultQuery("commit_short_sha", "")
-
-		testResultsDir := util.TemplateToStringMust(conf.CsvResultDirFmt, struct {
-			Project    string
-			TestStages string
-			Branch     string
-		}{
-			Project:    project,
-			TestStages: testStages,
-			Branch:     branch,
-		})
-
-		queryFunc := map[string]func(string, string, string) (*data.History, error){
-			"accuracy":   data.QueryAccuracyHistory,
-			"similarity": data.QuerySimilarityHistory,
-		}
-		if history, err := queryFunc[testType](testResultsDir, testCaseId, commitShortSha); history.Data.N() == 0 || err != nil {
-			c.IndentedJSON(http.StatusBadRequest, gin.H{
-				"project":          project,
-				"test_type":        testType,
-				"test_stages":      testStages,
-				"branch":           branch,
-				"test_case_id":     testCaseId,
-				"commit_short_sha": commitShortSha,
-				"test_results_dir": testResultsDir,
-				"history":          history,
-				"error":            err,
-			})
+		} else if history.Data.N() == 0 {
+			c.IndentedJSON(http.StatusNotFound, gin.H{"history": history})
+			return
 		} else {
-			err := graph.Render(c.Writer, &history.Data, &history.Option)
-			if err != nil {
-				c.IndentedJSON(http.StatusBadRequest, gin.H{
-					"project":          project,
-					"test_type":        testType,
-					"test_stages":      testStages,
-					"branch":           branch,
-					"test_case_id":     testCaseId,
-					"commit_short_sha": commitShortSha,
-					"test_results_dir": testResultsDir,
-					"history":          history,
-					"error":            err,
-				})
+			if err := graph.Render(c.Writer, &history.Data, &history.Option); err != nil {
+				c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err})
 			}
 		}
 	})
