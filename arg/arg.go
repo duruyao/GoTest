@@ -38,7 +38,7 @@ Options:
 Examples:
     {{.Exec}}
     {{.Exec}} --dir {{.Dir}}
-    {{.Exec}} --host {{.Host}} --dir {{.Dir}}
+    {{.Exec}} --dir {{.Dir}} --host {{.Host}} 
 
 See more about {{.App}} at {{.Link}}
 `

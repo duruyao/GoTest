@@ -31,30 +31,24 @@ GoTest parses test results and creates interactive visualizations in the web
 Options:
     -h, --help                  Display this help message
     -v, --version               Print version information and quit
+    --dir  STRING               Directory of dataset (default: './dataset')
     --host STRING               Host address to listen (default: '0.0.0.0:4936')
 
 Examples:
     gotest
-    gotest --host 0.0.0.0:4936
-
-See more about GoTest at https://github.com/duruyao/gotest
+    gotest --dir ./dataset
+    gotest --dir ./dataset --host 0.0.0.0:4936
 
 ```
 
-Start gotest in the foreground.
+```shell
+tar -zxf dataset.tar.gz
+nohup ${PWD}/gotest --dir ./dataset --host 0.0.0.0:4936 </dev/null 1>/${PWD}/gotest.out 2>&1 &
 
-```bash
-gotest --host=0.0.0.0:4936
-```
+if [ -n "$(command -v open)" ]; then OPEN_EXE="open"; else OPEN_EXE="xdg-open"; fi
+${OPEN_EXE} "http://0.0.0.0:4936/history?project=vc0728&test_type=similarity&branch=dev&test_case_id=OC9BbGV4TmV0&commit_short_sha=a25708c7"
+${OPEN_EXE} "http://0.0.0.0:4936/history?project=vc0768&test_type=similarity&branch=dev&test_case_id=MTYvQWxleE5ldA==&commit_short_sha=c5dc5db1"
+${OPEN_EXE} "http://0.0.0.0:4936/history?project=vc0728&test_type=accuracy&branch=dev&test_case_id=QWxleE5ldG9sZDhTdGF0aXN0aWNzU3RhdGlzdGljcw==&commit_short_sha=a25708c7"
+${OPEN_EXE} "http://0.0.0.0:4936/history?project=vc0768&test_type=accuracy&branch=dev&test_case_id=QWxleE5ldG5ldzBPdXRsaWVyX1JlbW92ZU91dGxpZXJfUmVtb3ZlRXVjbGlkZWFu&commit_short_sha=c5dc5db1"
 
-Start gotest in the background.
-
-```bash
-gotest --host=0.0.0.0:4936 &
-```
-
-Start gotest in the background via **Nohup**.
-
-```bash
-nohup gotest --host=0.0.0.0:4936 </dev/null 1>/$PWD/gotest.out 2>&1 &
 ```
