@@ -5,20 +5,20 @@
 *.idea/
 
 # Temp files
-tmp/*
-*.swp
 *~
-bin/*
-release*
+*.swp
+tmp/
+bak/
 
 # Commitizen
 node_modules/
 package-lock.json
 
 # Binaries for programs and plugins
+bin/
+app/
+release*/
 gotest
-gotest.exe
-app/*
 *.exe
 *.exe~
 *.dll
