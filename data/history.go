@@ -52,8 +52,8 @@ func QueryHistory(dir, id, commit string) (*History, error) {
 		}
 		if r != nil {
 			history.Option = Option{
-				xName:           "Date",
-				yName:           "Accuracy",
+				xName:           "Date (YY-MM-DD)",
+				yName:           "Accuracy (0 ~ 1)",
 				title:           r.packageTitleMust(),
 				link:            r.packageUrlMust(),
 				subtitle:        r.htmlDirTitle(),
@@ -72,8 +72,8 @@ func QueryHistory(dir, id, commit string) (*History, error) {
 		}
 		if r != nil {
 			history.Option = Option{
-				xName:           "Date",
-				yName:           "Average Similarity",
+				xName:           "Date (YY-MM-DD)",
+				yName:           "Average Similarity (0 ~ 1)",
 				title:           r.packageTitleMust(),
 				link:            r.packageUrlMust(),
 				subtitle:        r.htmlDirTitle(),

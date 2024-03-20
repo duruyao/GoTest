@@ -32,12 +32,27 @@ func Render(r io.Writer, data Data, option Option) error {
 				Link:     option.Link(),
 				Subtitle: option.Subtitle(),
 				SubLink:  option.SubLink(),
+				Right:    "0",
 			},
 		),
 		charts.WithTooltipOpts(opts.Tooltip{Show: opts.Bool(true), Trigger: "axis", Enterable: opts.Bool(true)}),
 		charts.WithInitializationOpts(opts.Initialization{Width: "2000px", Height: "800px"}),
-		charts.WithXAxisOpts(opts.XAxis{Name: option.XName()}),
-		charts.WithYAxisOpts(opts.YAxis{Name: option.YName()}),
+		charts.WithXAxisOpts(
+			opts.XAxis{
+				Name:         option.XName(),
+				NameLocation: "center",
+				NameGap:      40,
+				AxisLabel:    &opts.AxisLabel{Color: "black"},
+			},
+		),
+		charts.WithYAxisOpts(
+			opts.YAxis{
+				Name:         option.YName(),
+				NameLocation: "center",
+				NameGap:      50,
+				AxisLabel:    &opts.AxisLabel{Color: "black"},
+			},
+		),
 		charts.WithEventListeners(event.Listener{EventName: "click", Handler: opts.FuncOpts(JFunc)}),
 	)
 
@@ -46,7 +61,7 @@ func Render(r io.Writer, data Data, option Option) error {
 	line.SetSeriesOptions(
 		charts.WithLineChartOpts(
 			opts.LineChart{
-				Smooth:     opts.Bool(false),
+				Smooth:     opts.Bool(true),
 				ShowSymbol: opts.Bool(true),
 				SymbolSize: 10,
 				Symbol:     option.LineChartSymbol(),
@@ -57,7 +72,7 @@ func Render(r io.Writer, data Data, option Option) error {
 			opts.MarkPointNameTypeItem{Name: "Maximum", Type: "max"},
 		),
 		charts.WithMarkPointStyleOpts(
-			opts.MarkPointStyle{SymbolSize: 80, Label: &opts.Label{Show: opts.Bool(true)}}),
+			opts.MarkPointStyle{SymbolSize: 70, Label: &opts.Label{Show: opts.Bool(true)}}),
 	)
 
 	page := components.NewPage()
