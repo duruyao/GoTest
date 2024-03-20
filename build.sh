@@ -76,7 +76,7 @@ for release in "${release_list[@]}"; do
   echo ""
   # shellcheck disable=SC2206
   release=(${release[*]})
-  target_dir="${PWD}/${app}-${release[0]}-${release[1]}-${version}"
+  target_dir="${PWD}/${app}-${release[0]}-${release[1]}-v${version}"
   target_path="${target_dir}/${app}"
   if [ "${release[0]}" == "windows" ]; then
     target_path="${target_dir}/${app}.exe"
