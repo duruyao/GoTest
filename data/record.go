@@ -16,6 +16,7 @@ package data
 
 import (
 	"fmt"
+	"github.com/duruyao/gotest/arg"
 	"github.com/duruyao/gotest/conf"
 	"github.com/duruyao/gotest/util"
 	"github.com/gocarina/gocsv"
@@ -87,7 +88,7 @@ func (r *record) similarityMust() float64 {
 }
 
 func (r *record) recordUrl() string {
-	return fmt.Sprintf("%s%s#%s", conf.FileServerAddr, r.htmlPath(), r.Id)
+	return fmt.Sprintf("http://%s%s/%s#%s", arg.Host(), conf.DirUrlPrefix, util.RelativePathMust(arg.Dir(), r.htmlPath()), r.Id)
 }
 
 func (r *record) packageTitleMust() string {
@@ -108,7 +109,7 @@ func (r *record) htmlDirTitle() string {
 }
 
 func (r *record) htmlDirUrl() string {
-	return fmt.Sprintf("%s%s", conf.FileServerAddr, r.htmlDir())
+	return fmt.Sprintf("http://%s%s/%s", arg.Host(), conf.DirUrlPrefix, util.RelativePathMust(arg.Dir(), r.htmlDir()))
 }
 
 func queryRecord(file, id string) (*record, error) {

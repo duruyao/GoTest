@@ -16,14 +16,17 @@ package conf
 
 import (
 	"bytes"
+	"github.com/duruyao/gotest/util"
 	"log"
 	"text/template"
 )
 
+var DefaultDir = util.GetWorkDirMust() + "/dataset"
+
 const (
 	DefaultHost      = "0.0.0.0:4936"
-	FileServerAddr   = "http://10.0.13.134:3927"
-	CsvResultDirTmpl = `/opt/gitlab-data/gitlab-test/{{.Project}}/test-result/{{.TestType}}/{{.Branch}}/csv`
+	DirUrlPrefix     = "/dataset"
+	CsvResultDirTmpl = `{{.Project}}/test-result/{{.TestType}}/{{.Branch}}/csv`
 )
 
 const (

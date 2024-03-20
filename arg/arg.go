@@ -32,16 +32,19 @@ GoTest parses test results and creates interactive visualizations in the web
 Options:
     -h, --help                  Display this help message
     -v, --version               Print version information and quit
+    --dir  STRING               Directory of dataset (default: '{{.Dir}}')
     --host STRING               Host address to listen (default: '{{.Host}}')
 
 Examples:
     {{.Exec}}
-    {{.Exec}} --host {{.Host}}
+    {{.Exec}} --dir {{.Dir}}
+    {{.Exec}} --host {{.Host}} --dir {{.Dir}}
 
 See more about {{.App}} at {{.Link}}
 `
 
 type args struct {
+	dir         string
 	host        string
 	wantHelp    bool
 	wantVersion bool
@@ -55,6 +58,11 @@ func (a *args) parse() {
 }
 
 var a args
+
+func Dir() string {
+	a.parse()
+	return a.dir
+}
 
 func Host() string {
 	a.parse()
@@ -77,12 +85,14 @@ func Usage() string {
 	data := struct {
 		Logo string
 		Exec string
+		Dir  string
 		Host string
 		App  string
 		Link string
 	}{
 		Logo: conf.Logo,
 		Exec: os.Args[0],
+		Dir:  conf.DefaultDir,
 		Host: conf.DefaultHost,
 		App:  conf.App,
 		Link: conf.Link,

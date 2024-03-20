@@ -20,6 +20,7 @@ import (
 )
 
 func init() {
+	flag.StringVar(&a.dir, "dir", conf.DefaultDir, "Directory of dataset")
 	flag.StringVar(&a.host, "host", conf.DefaultHost, "Host address to listen")
 	flag.BoolVar(&a.wantHelp, "h", false, "Display this help message")
 	flag.BoolVar(&a.wantHelp, "help", false, "Display this help message")

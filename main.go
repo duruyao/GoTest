@@ -51,7 +51,7 @@ func main() {
 			return
 		}
 
-		testResultDir := util.TemplateToStringMust(conf.CsvResultDirTmpl, param)
+		testResultDir := arg.Dir() + "/" + util.TemplateToStringMust(conf.CsvResultDirTmpl, param)
 
 		if history, err := data.QueryHistory(testResultDir, param.TestCaseId, param.CommitShortSha); err != nil {
 			c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err})
@@ -65,5 +65,7 @@ func main() {
 			}
 		}
 	})
+	router.Static(conf.DirUrlPrefix, arg.Dir())
+	router.StaticFile("/favicon.ico", "favicon.ico")
 	log.Fatalln(router.Run(arg.Host()))
 }

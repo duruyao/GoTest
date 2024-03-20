@@ -19,6 +19,8 @@ import (
 	"encoding/base32"
 	"log"
 	"math"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"text/template"
@@ -61,4 +63,20 @@ func RemoveExt(path string) string {
 		}
 	}
 	return path
+}
+
+func GetWorkDirMust() string {
+	d, e := os.Getwd()
+	if e != nil {
+		log.Fatalln(e)
+	}
+	return d
+}
+
+func RelativePathMust(base, target string) string {
+	f, e := filepath.Rel(base, target)
+	if e != nil {
+		log.Fatalln(e)
+	}
+	return f
 }
