@@ -65,7 +65,7 @@ func main() {
 			}
 		}
 	})
-	router.Static(conf.DirUrlPrefix, arg.Dir())
+	router.StaticFS(conf.DirUrlPrefix, http.Dir(arg.Dir()))
 	router.StaticFile("/favicon.ico", "favicon.ico")
 	log.Fatalln(router.Run(arg.Host()))
 }
