@@ -4,13 +4,10 @@ GoTest parses test results (CSV files) and creates interactive visualizations in
 
 ## Install
 
-### Download executable
-
-Download the compiled **[releases](https://github.com/duruyao/gotest/releases)** for your platform.
+- Download the compiled **[releases](https://github.com/duruyao/gotest/releases)** for your platform.
+- Type `bash build.sh --all` to cross compile go application for multi-platform.
 
 ## Usage
-
-The following operation takes the Linux platform as an example.
 
 Type `gotest -h` to show help manual.
 
@@ -41,9 +38,12 @@ Examples:
 
 ```
 
+Prepare the dataset, start the application and send http requests.
+
 ```shell
+bash build.sh
 tar -zxf dataset.tar.gz
-nohup ${PWD}/gotest --dir ./dataset --host 0.0.0.0:4936 </dev/null 1>/${PWD}/gotest.out 2>&1 &
+nohup ./gotest </dev/null 1>gotest.out 2>&1 &
 
 if [ -n "$(command -v open)" ]; then OPEN_EXE="open"; else OPEN_EXE="xdg-open"; fi
 ${OPEN_EXE} "http://0.0.0.0:4936/history?project=vc0728&test_type=similarity&branch=dev&test_case_id=OC9BbGV4TmV0&commit_short_sha=a25708c7"
