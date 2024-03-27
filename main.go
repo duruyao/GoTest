@@ -47,21 +47,21 @@ func main() {
 		}{}
 
 		if err := c.ShouldBindQuery(&param); err != nil {
-			c.IndentedJSON(http.StatusBadRequest, gin.H{"error": err})
+			c.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
 		testResultDir := arg.Dir() + "/" + util.TemplateToStringMust(conf.CsvResultDirTmpl, param)
 
 		if history, err := data.QueryHistory(testResultDir, param.TestCaseId, param.CommitShortSha); err != nil {
-			c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err})
+			c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		} else if history.Data.N() == 0 {
 			c.IndentedJSON(http.StatusNotFound, gin.H{"history": history})
 			return
 		} else {
 			if err := graph.Render(c.Writer, &history.Data, &history.Option); err != nil {
-				c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err})
+				c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			}
 		}
 	})
