@@ -28,7 +28,10 @@ func Render(r io.Writer, data Data, option Option) error {
 	xAxis := make([]string, 0)
 	links := make([]string, 0)
 	series := make([]opts.LineData, 0)
-	for i := 0; i < data.N(); i++ {
+	k := 0
+	for k = 0; k < data.N() && data.Y(k) == 0; k++ { // skip a lot of empty data in the early stage
+	}
+	for i := k; i < data.N(); i++ {
 		xAxis = append(xAxis, data.X(i))
 		links = append(links, data.Link(i))
 		series = append(series, opts.LineData{Value: data.Y(i)})
