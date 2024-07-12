@@ -107,7 +107,7 @@ func QueryHistory(dir, id, testType, lastCommit string, crossPlatform bool) (*Hi
 		if r != nil {
 			history.Option = Option{
 				xName:           "Date (YY-MM-DD)",
-				yName:           "Average similarity of Caffe models on AMD64 and ARMv7 (0 ~ 1)",
+				yName:           "Average similarity of Caffe model on AMD64 and ARMv7 (0 ~ 1)",
 				title:           r.packageTitleMust(),
 				link:            r.packageUrlMust(),
 				subtitle:        r.htmlDirTitle(),
