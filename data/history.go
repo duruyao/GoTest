@@ -27,11 +27,11 @@ type History struct {
 }
 
 const (
-	AccuracyTestType   = "accuracy"
-	SimilarityTestType = "similarity"
+	AccuracyTest   = "accuracy"
+	SimilarityTest = "similarity"
 )
 
-func QueryHistory(dir, id, commit string) (*History, error) {
+func QueryHistory(dir, id, testType, lastCommit string, crossPlatform bool) (*History, error) {
 	var csvFiles []string
 	if e := filepath.Walk(dir, func(path string, info fs.FileInfo, err error) error {
 		if err != nil {
@@ -47,9 +47,9 @@ func QueryHistory(dir, id, commit string) (*History, error) {
 	sort.Strings(csvFiles)
 
 	end := len(csvFiles)
-	if len(commit) > 0 {
+	if len(lastCommit) > 0 {
 		for i := len(csvFiles) - 1; i >= 0; i-- {
-			if strings.Contains(csvFiles[i], commit) {
+			if strings.Contains(csvFiles[i], lastCommit) {
 				end = i + 1
 				break
 			}
@@ -57,7 +57,7 @@ func QueryHistory(dir, id, commit string) (*History, error) {
 	}
 
 	r, e := (*record)(nil), error(nil)
-	if strings.Contains(dir, AccuracyTestType) {
+	if testType == AccuracyTest {
 		history := &History{}
 		for i := range csvFiles[:end] {
 			if r, e = queryRecord(csvFiles[i], id); r != nil && e == nil {
@@ -77,7 +77,7 @@ func QueryHistory(dir, id, commit string) (*History, error) {
 			}
 		}
 		return history, nil
-	} else if strings.Contains(dir, SimilarityTestType) {
+	} else if testType == SimilarityTest && !crossPlatform {
 		history := &History{}
 		for i := range csvFiles[:end] {
 			if r, e = queryRecord(csvFiles[i], id); r != nil && e == nil {
@@ -87,13 +87,33 @@ func QueryHistory(dir, id, commit string) (*History, error) {
 		if r != nil {
 			history.Option = Option{
 				xName:           "Date (YY-MM-DD)",
-				yName:           "Average Similarity (0 ~ 1)",
+				yName:           "Average similarity between Caffe model and NPU model (0 ~ 1)",
 				title:           r.packageTitleMust(),
 				link:            r.packageUrlMust(),
 				subtitle:        r.htmlDirTitle(),
 				subLink:         r.htmlDirUrl(),
 				lineChartSymbol: "diamond",
 				lineChartColor:  "#8E44AD",
+			}
+		}
+		return history, nil
+	} else if testType == SimilarityTest && crossPlatform {
+		history := &History{}
+		for i := range csvFiles[:end] {
+			if r, e = queryRecord(csvFiles[i], id); r != nil && e == nil {
+				history.Data.Append(r.dateMust(), r.similarity2Must(), r.recordUrl())
+			}
+		}
+		if r != nil {
+			history.Option = Option{
+				xName:           "Date (YY-MM-DD)",
+				yName:           "Average similarity of Caffe models on AMD64 and ARMv7 (0 ~ 1)",
+				title:           r.packageTitleMust(),
+				link:            r.packageUrlMust(),
+				subtitle:        r.htmlDirTitle(),
+				subLink:         r.htmlDirUrl(),
+				lineChartSymbol: "triangle",
+				lineChartColor:  "#CD5C5C",
 			}
 		}
 		return history, nil

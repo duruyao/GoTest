@@ -31,6 +31,7 @@ type record struct {
 	Id             string `csv:"DIV_ID"`
 	Accuracy       string `csv:"ACCURACY"`
 	Similarity     string `csv:"COSINE_SIMILARITY"`
+	Similarity2    string `csv:"CROSS_PLATFORM_SIMILARITY"`
 	PackagePath    string `csv:"TEST_CASE_PATH"`
 	NpuModelPath   string `csv:"NPUMODEL"`
 	JobUrl         string `csv:"CI_JOB_URL"`
@@ -79,6 +80,17 @@ func (r *record) accuracyMust() float64 {
 func (r *record) similarityMust() float64 {
 	if len(r.Similarity) > 2 {
 		s, sum := strings.Split(r.Similarity[1:len(r.Similarity)-1], ", "), 0.0
+		for i := range s {
+			sum += util.StringToFloatMust(s[i])
+		}
+		return util.ChangeFloatPrecision(sum/float64(len(s)), 3)
+	}
+	return 0.0
+}
+
+func (r *record) similarity2Must() float64 {
+	if len(r.Similarity2) > 2 {
+		s, sum := strings.Split(r.Similarity2[1:len(r.Similarity2)-1], ", "), 0.0
 		for i := range s {
 			sum += util.StringToFloatMust(s[i])
 		}

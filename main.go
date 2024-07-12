@@ -44,6 +44,7 @@ func main() {
 			Branch         string `form:"branch" binding:"required"`
 			TestCaseId     string `form:"test_case_id" binding:"required"`
 			CommitShortSha string `form:"commit_short_sha"`
+			CrossPlatform  bool   `form:"cross_platform"`
 		}{}
 
 		if err := c.ShouldBindQuery(&param); err != nil {
@@ -53,7 +54,8 @@ func main() {
 
 		testResultDir := arg.Dir() + "/" + util.TemplateToStringMust(conf.CsvResultDirTmpl, param)
 
-		if history, err := data.QueryHistory(testResultDir, param.TestCaseId, param.CommitShortSha); err != nil {
+		if history, err := data.QueryHistory(
+			testResultDir, param.TestCaseId, param.TestType, param.CommitShortSha, param.CrossPlatform); err != nil {
 			c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		} else if history.Data.N() == 0 {
