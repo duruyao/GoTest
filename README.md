@@ -50,5 +50,10 @@ ${OPEN_EXE} "http://0.0.0.0:4936/history?project=vc0728&test_type=similarity&bra
 ${OPEN_EXE} "http://0.0.0.0:4936/history?project=vc0768&test_type=similarity&branch=dev&test_case_id=MTYvQWxleE5ldA==&commit_short_sha=c5dc5db1"
 ${OPEN_EXE} "http://0.0.0.0:4936/history?project=vc0728&test_type=accuracy&branch=dev&test_case_id=QWxleE5ldG9sZDhTdGF0aXN0aWNzU3RhdGlzdGljcw==&commit_short_sha=a25708c7"
 ${OPEN_EXE} "http://0.0.0.0:4936/history?project=vc0768&test_type=accuracy&branch=dev&test_case_id=QWxleE5ldG5ldzBPdXRsaWVyX1JlbW92ZU91dGxpZXJfUmVtb3ZlRXVjbGlkZWFu&commit_short_sha=c5dc5db1"
-
 ```
+
+The effect is as follows.
+
+![web_page_1.png](./web_page_1.png)
+
+![web_page_2.png](./web_page_2.png)
