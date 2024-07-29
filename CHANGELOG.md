@@ -1,3 +1,13 @@
+# [1.0.1](https://github.com/duruyao/gotest/compare/v1.0.0...v1.0.1) (2024-07-29)
+
+
+### Features
+
+* skip a lot of empty data in the early stage ([663989a](https://github.com/duruyao/gotest/commit/663989a15b305ae112c526fcb697c5b44480b4c9))
+* visualize historical data of cross-platform similarity of model ([189ffb8](https://github.com/duruyao/gotest/commit/189ffb8652f79288292659a176cf6593687ed156))
+
+
+
 # 1.0.0 (2024-03-20)
 
 

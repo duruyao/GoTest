@@ -32,8 +32,8 @@ const (
 const (
 	App               = `GoTest`
 	Link              = `https://github.com/duruyao/gotest`
-	Version           = `1.0.0`
-	ReleaseDate       = `2024-03-20`
+	Version           = `1.0.1`
+	ReleaseDate       = `2024-07-29`
 	VersionSerialTmpl = `{{.App}} {{.Version}} ({{.ReleaseDate}})`
 	Logo              = `
    _____    _______        _
